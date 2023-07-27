@@ -97,11 +97,13 @@ export default class GithubWebhookController {
             const lastCommit = commits[0];
             msg = `项目 ${repository.name} 收到了一次push，提交者：${user_name}，最新提交信息：${lastCommit.message}`;
             ctx.body = msg;
-            const mdMsg = `项目 [${repository.name}](${repository.url}) 收到一次push提交
-                           提交者:  \<font color= \"commit\"\>${user_name}\</font\>
-                           分支:  \<font color= \"commit\"\>${ref}\</font\>
-                           最新提交信息: ${lastCommit.message}`;
-            await robot.sendMdMsg(mdMsg);
+            const mdMsg = `${lastCommit.message}
+来自: ${user_name}
+项目 [${repository.name}](${repository.url}) 收到一次push提交
+
+分支:  \<font color= \"commit\"\>${ref}\</font\>
+`;
+            await robot.sendTextMsg(mdMsg);
             ctx.status = 200;
             return;
         }
@@ -124,7 +126,7 @@ export default class GithubWebhookController {
                         源分支：${pull_request.head.ref}
                         目标分支：${pull_request.base.ref}
                         [查看PR详情](${pull_request.html_url})`;
-        await robot.sendMdMsg(mdMsg);
+        await robot.sendTextMsg(mdMsg);
         ctx.status = 200;
         return;
     }
@@ -150,7 +152,7 @@ export default class GithubWebhookController {
                         标题：${issue.title}
                         发起人：[${issue.user.login}](${issue.user.html_url})
                         [查看详情](${issue.html_url})`;
-        await robot.sendMdMsg(mdMsg);
+        await robot.sendTextMsg(mdMsg);
         ctx.status = 200;
         return;
     }
