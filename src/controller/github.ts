@@ -95,13 +95,15 @@ export default class GithubWebhookController {
             return await robot.sendTextMsg(msg);
         } else {
             const lastCommit = commits[0];
+            const commitCnt = commits.length;
             msg = `项目 ${repository.name} 收到了一次push，提交者：${user_name}，最新提交信息：${lastCommit.message}`;
             ctx.body = msg;
             const mdMsg = `${lastCommit.message}
-来自: ${user_name}
-项目 [${repository.name}](${repository.url}) 收到一次push提交
 
-分支:  \<font color= \"commit\"\>${ref}\</font\>
+来自: ${user_name}
+提交了 ${commitCnt} 个commit
+分支: ${ref}
+从Github上查看 ${repository.name} ${repository.url}
 `;
             await robot.sendTextMsg(mdMsg);
             ctx.status = 200;
